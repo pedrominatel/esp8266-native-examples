@@ -24,7 +24,7 @@
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.2137430446" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
 								<option id="gnu.c.compiler.option.include.paths.741373826" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="/home/piiiters/esp-open-sdk/sdk/include"/>
-									<listOptionValue builtIn="false" value="/home/piiiters/esp-open-sdk/sdk/examples/driver_lib/include/"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/blank_project/driver_lib/include}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.801697099" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>

@@ -4,7 +4,10 @@
 #include "driver/uart.h"
 
 // Contains ssid and password
-#include "user_config.h"
+//#include "user_config.h"
+
+const char wifi_ssid[32] = "Resident_Evil";
+const char wifi_pass[64] = "umbrella_corp";
 
 // Data structure for the configuration of your wireless network.
 // Will contain ssid and password for your network.
@@ -12,8 +15,8 @@ struct station_config stationConf;
 
 void ICACHE_FLASH_ATTR wifiInit() {
   // Copy the ssid and the password into the data structure for later call.
-  os_memcpy(&stationConf.ssid, ssid, 32);
-  os_memcpy(&stationConf.password, pass, 32);
+  os_memcpy(&stationConf.ssid, wifi_ssid, 32);
+  os_memcpy(&stationConf.password, wifi_pass, 64);
 
   // Set the wifi mode.  Can be STATION_MODE, SOFTAP_MODE or STATIONAP_MODE.
   // In this caswe we just want to connect as a client on the wireless network
