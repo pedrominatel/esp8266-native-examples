@@ -1,42 +1,43 @@
-#include "ets_sys.h"
 #include "osapi.h"
-#include "gpio.h"
 #include "os_type.h"
+#include <user_interface.h>
+#include "driver/uart.h"
+
+// Contains ssid and password
 #include "user_config.h"
-#include "user_interface.h"
 
-#define user_procTaskPrio        0
-#define user_procTaskQueueLen    1
-os_event_t    user_procTaskQueue[user_procTaskQueueLen];
-static void loop(os_event_t *events);
+// Data structure for the configuration of your wireless network.
+// Will contain ssid and password for your network.
+struct station_config stationConf;
 
-//Main code function
-static void ICACHE_FLASH_ATTR
-loop(os_event_t *events)
-{
-    os_printf("Hello\n\r");
-    os_delay_us(10000);
-    system_os_post(user_procTaskPrio, 0, 0 );
+void ICACHE_FLASH_ATTR wifiInit() {
+  // Copy the ssid and the password into the data structure for later call.
+  os_memcpy(&stationConf.ssid, ssid, 32);
+  os_memcpy(&stationConf.password, pass, 32);
+
+  // Set the wifi mode.  Can be STATION_MODE, SOFTAP_MODE or STATIONAP_MODE.
+  // In this caswe we just want to connect as a client on the wireless network
+  // so we use station  mode.
+  wifi_set_opmode( STATION_MODE );
+
+  // Set the ssid and password of the network you want to connect to.
+  wifi_station_set_config(&stationConf);
+
+  // wifi_station_connect isn't needed as when wifi_station_set_config is called as
+  // the esp8266 will connect to the router automatically.
+  //wifi_station_connect();
 }
 
-//Init function 
-void ICACHE_FLASH_ATTR
-user_init()
-{
-    char ssid[32] = SSID;
-    char password[64] = SSID_PASSWORD;
-    struct station_config stationConf;
+void user_init(void) {
+  // Configure the UART0 and UART1 (TX only) to 115200
+  uart_init(BIT_RATE_115200,BIT_RATE_115200);
 
-    //Set station mode
-    wifi_set_opmode( 0x1 );
+  // Print a message that we are starting user_init on debug uart
+  os_printf("\nStarting...\n");
 
-    //Set ap settings
-    os_memcpy(&stationConf.ssid, ssid, 32);
-    os_memcpy(&stationConf.password, password, 64);
-    wifi_station_set_config(&stationConf);
+  // Setup the wifi
+  wifiInit();
 
-    //Start os task
-    system_os_task(loop, user_procTaskPrio,user_procTaskQueue, user_procTaskQueueLen);
-
-    system_os_post(user_procTaskPrio, 0, 0 );
+  // Print a message that we have completed user_init on debug uart
+  os_printf("Ready...\n");
 }
