@@ -1,6 +1,11 @@
 # ESP8266 Native Examples
 ESP8266 Native development examples
 
+Those examples was developed to be used with the Native development in C language for the open-SDK.
+The SDK installation can be found [here](https://github.com/pfalcon/esp-open-sdk).
+
+If you want to add your example here, please, do not hesitate to pull request!
+
 Example Projects
 ================
 
@@ -9,4 +14,4 @@ Example Projects
 Supported Boards and Modules
 ================
 
-This code was tested in the nodeLHC project (link) that uses the ESP-07 module.
+This code was tested in the [nodeLHC](https://hackaday.io/project/7763-nodelhc-esp8266-development-board) project that uses the ESP-07 module.
