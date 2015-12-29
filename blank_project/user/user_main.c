@@ -6,8 +6,8 @@
 // Contains ssid and password
 //#include "user_config.h"
 
-const char wifi_ssid[32] = "Resident_Evil";
-const char wifi_pass[64] = "umbrella_corp";
+const char wifi_ssid[32] = "ssid";
+const char wifi_pass[64] = "wifipassword";
 
 // Data structure for the configuration of your wireless network.
 // Will contain ssid and password for your network.
