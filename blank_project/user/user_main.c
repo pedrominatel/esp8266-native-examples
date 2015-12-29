@@ -4,8 +4,6 @@
 #include "driver/uart.h"
 
 // Contains ssid and password
-//#include "user_config.h"
-
 const char wifi_ssid[32] = "ssid";
 const char wifi_pass[64] = "wifipassword";
 
