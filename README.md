@@ -9,8 +9,8 @@ If you want to add your example here, please, do not hesitate to pull request!
 Example Projects
 ================
 
-* [b]blank_project[/b]: Used for new projects with the drivers libs
-* wifi_connect: Allow the simple WiFi connection as STATION
+* **blank_project**: Used for new projects with the drivers libs
+* **wifi_connect**: Allow the simple WiFi connection as STATION
 
 Supported Boards and Modules
 ================
