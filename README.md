@@ -24,4 +24,4 @@ To build the projects, each project have the Makefile
 
 To build and flash to the device:
 
-* $ make clean & make & make flash
+* **$ make clean & make & make flash**
