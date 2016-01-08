@@ -12,12 +12,16 @@ If you want to add your example here, please, do not hesitate to pull request!
 * **blank_project**: Used for new projects with the drivers libs
 * **wifi_connect**: Allow the simple WiFi connection as STATION
 * **blinky**: A simple LED blink using timer and OS task
-* **web_server** Soon!
+* **web_server**: Soon!
  
 ## Supported Boards and Modules
 ================
 
 This code was tested in the [nodeLHC](https://hackaday.io/project/7763-nodelhc-esp8266-development-board) project that uses the ESP-07 module.
+
+It shoud run on any ESP8266 version!
+
+**Please, in case of any problem, open a bug!**
 
 ## Build and Flash
 ================
