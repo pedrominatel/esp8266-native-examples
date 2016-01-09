@@ -22,38 +22,25 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "osapi.h"
-#include "os_type.h"
-#include <user_interface.h>
-#include "driver/uart.h"
+#include "wifi_manager.h"
 
-#define user_procTaskPrio        0
-#define user_procTaskQueueLen    1
+struct station_config stationConf;
 
-#define DEBUG_SERIAL
+/*Function wifiInit
+ *
+ * */
+void ICACHE_FLASH_ATTR wifi_inti(void) {
 
-os_event_t    user_procTaskQueue[user_procTaskQueueLen];
-static void loop(os_event_t *events);
-
-static void ICACHE_FLASH_ATTR loop(os_event_t *events){
-    os_delay_us(10000);
-    system_os_post(user_procTaskPrio, 0, 0 );
 }
 
-void ICACHE_FLASH_ATTR user_init(void) {
+/*Function wifi_connect
+ *
+ * */
+void ICACHE_FLASH_ATTR wifi_setup(char* ssid, char* password, uint8_t mode) {
 
-#ifdef DEBUG_SERIAL
-	uart_init(BIT_RATE_115200,BIT_RATE_115200);
-	system_set_os_print(TRUE);
-#else
-	system_set_os_print(FALSE);
-#endif
-
-	char ssid[32] = "LHC";
-	char pass[64] = "tijolo22";
-
-	wifi_setup(&ssid,&pass, STATION_MODE);
-
-    system_os_task(loop, user_procTaskPrio,user_procTaskQueue, user_procTaskQueueLen);
-    system_os_post(user_procTaskPrio, 0, 0 );
+	struct station_config stationConf;
+	wifi_set_opmode(mode);
+	os_memcpy(&stationConf.ssid, ssid, 32);
+	os_memcpy(&stationConf.password, password, 64);
+	wifi_station_set_config(&stationConf);
 }
