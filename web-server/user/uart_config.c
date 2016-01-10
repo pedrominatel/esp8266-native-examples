@@ -22,25 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "wifi_manager.h"
+#include "driver/uart.h"
 
-struct station_config stationConf;
+void ICACHE_FLASH_ATTR uart_config(uint8_t uart, uint32_t baud){
 
-/*Function wifiInit
- *
- * */
-void ICACHE_FLASH_ATTR wifi_inti(void) {
-	//TODO wifi intialization
-}
+	UART_SetBaudrate(uart, baud);
 
-/*Function wifi_connect
- *
- * */
-void ICACHE_FLASH_ATTR wifi_setup(char* ssid, char* password, uint8_t mode) {
-
-	struct station_config stationConf;
-	wifi_set_opmode(mode);
-	os_memcpy(&stationConf.ssid, ssid, 32);
-	os_memcpy(&stationConf.password, password, 64);
-	wifi_station_set_config(&stationConf);
 }

@@ -32,11 +32,62 @@ SOFTWARE.
 
 #define DEBUG_SERIAL
 
-os_event_t    user_procTaskQueue[user_procTaskQueueLen];
-static void loop(os_event_t *events);
+static char ssid[32] = "IOT";
+static char pass[64] = "iotnetwork";
 
-static void ICACHE_FLASH_ATTR loop(os_event_t *events){
-    os_delay_us(10000);
+os_event_t    user_procTaskQueue[user_procTaskQueueLen];
+static void ost_loop(os_event_t *events);
+static void ost_wifi_setup(os_event_t *events);
+static void ost_wifi_scan(os_event_t *events);
+
+struct scan_config scan;
+struct bss_info *bss;
+
+static void ICACHE_FLASH_ATTR wifiScan_cb(void *arg, STATUS status) {
+    switch (status ) {
+    case OK:
+      os_printf("Status OK\n");
+      bss = arg;
+      bss = STAILQ_NEXT(bss, next);    // ignor first
+
+      while (bss != NULL) {
+          os_printf("ssid: %s\n", bss->ssid);
+          bss = STAILQ_NEXT(bss, next);
+      }
+
+      break;
+   case FAIL:
+       os_printf("Status FAIL\n");
+         break;
+   case PENDING:
+       os_printf("Status PENDING\n");
+         break;
+   case BUSY:
+       os_printf("Status BUSY\n");
+         break;
+   case CANCEL:
+       os_printf("Status CANCEL\n");
+         break;
+   default:
+       os_printf("Status UNKNOWN\n");
+         break;
+    }
+}
+
+static void ICACHE_FLASH_ATTR ost_wifi_setup(os_event_t *events){
+	os_printf("WiFi Setup...\n");
+	wifi_setup(&ssid,&pass, STATION_MODE);
+}
+
+static void ICACHE_FLASH_ATTR ost_wifi_scan(os_event_t *events){
+	os_printf("WiFi Scan...\n");
+	os_delay_us(1000000);
+	wifi_station_scan(NULL, wifiScan_cb);
+}
+
+
+static void ICACHE_FLASH_ATTR ost_loop(os_event_t *events){
+	os_delay_us(10000);
     system_os_post(user_procTaskPrio, 0, 0 );
 }
 
@@ -49,11 +100,13 @@ void ICACHE_FLASH_ATTR user_init(void) {
 	system_set_os_print(FALSE);
 #endif
 
-	char ssid[32] = "LHC";
-	char pass[64] = "tijolo22";
-
-	wifi_setup(&ssid,&pass, STATION_MODE);
-
-    system_os_task(loop, user_procTaskPrio,user_procTaskQueue, user_procTaskQueueLen);
+    system_os_task(ost_loop, user_procTaskPrio,user_procTaskQueue, user_procTaskQueueLen);
     system_os_post(user_procTaskPrio, 0, 0 );
+
+    system_os_task(ost_wifi_setup, 1,user_procTaskQueue, user_procTaskQueueLen);
+    system_os_post(1, 0, 0 );
+
+    system_os_task(ost_wifi_scan, 2,user_procTaskQueue, user_procTaskQueueLen);
+    system_os_post(2, 0, 0 );
+
 }
