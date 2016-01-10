@@ -9,10 +9,10 @@ If you want to add your example here, please, do not hesitate to pull request!
 ## Example Projects
 ================
 
-* **blank_project**: Used for new projects with the drivers libs
-* **wifi_connect**: Allow the simple WiFi connection as STATION
+* **blank-project**: Used for new projects with the drivers libs
+* **wifi-connect**: Allow the simple WiFi connection as STATION
 * **blinky**: A simple LED blink using timer and OS task
-* **web_server**: Soon!
+* **web-server**: Soon!
  
 ## Supported Boards and Modules
 ================
