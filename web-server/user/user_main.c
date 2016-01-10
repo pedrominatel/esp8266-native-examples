@@ -26,6 +26,7 @@ SOFTWARE.
 #include "os_type.h"
 #include <user_interface.h>
 #include "driver/uart.h"
+#include "wifi_manager.h"
 
 #define user_procTaskPrio        0
 #define user_procTaskQueueLen    1
@@ -41,47 +42,22 @@ static void ost_wifi_setup(os_event_t *events);
 static void ost_wifi_scan(os_event_t *events);
 
 struct scan_config scan;
-struct bss_info *bss;
-
-static void ICACHE_FLASH_ATTR wifiScan_cb(void *arg, STATUS status) {
-    switch (status ) {
-    case OK:
-      os_printf("Status OK\n");
-      bss = arg;
-      bss = STAILQ_NEXT(bss, next);    // ignor first
-
-      while (bss != NULL) {
-          os_printf("ssid: %s\n", bss->ssid);
-          bss = STAILQ_NEXT(bss, next);
-      }
-
-      break;
-   case FAIL:
-       os_printf("Status FAIL\n");
-         break;
-   case PENDING:
-       os_printf("Status PENDING\n");
-         break;
-   case BUSY:
-       os_printf("Status BUSY\n");
-         break;
-   case CANCEL:
-       os_printf("Status CANCEL\n");
-         break;
-   default:
-       os_printf("Status UNKNOWN\n");
-         break;
-    }
-}
 
 static void ICACHE_FLASH_ATTR ost_wifi_setup(os_event_t *events){
 	os_printf("WiFi Setup...\n");
+
+	uint8_t stationStatus = wifi_station_get_connect_status();
+
+	//Handle status
+
+	wifi_station_set_auto_connect(TRUE);
 	wifi_setup(&ssid,&pass, STATION_MODE);
 }
 
 static void ICACHE_FLASH_ATTR ost_wifi_scan(os_event_t *events){
 	os_printf("WiFi Scan...\n");
 	os_delay_us(1000000);
+	wifi_promiscuous_enable(0);
 	wifi_station_scan(NULL, wifiScan_cb);
 }
 

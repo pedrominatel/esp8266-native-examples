@@ -25,12 +25,44 @@ SOFTWARE.
 #include "wifi_manager.h"
 
 struct station_config stationConf;
+struct bss_info *bss;
 
 /*Function wifiInit
  *
  * */
 void ICACHE_FLASH_ATTR wifi_inti(void) {
 	//TODO wifi intialization
+}
+
+void ICACHE_FLASH_ATTR wifiScan_cb(void *arg, STATUS status) {
+    switch (status ) {
+    case OK:
+      os_printf("Status OK\n");
+      bss = arg;
+      bss = STAILQ_NEXT(bss, next);    // ignor first
+
+      while (bss != NULL) {
+          os_printf("ssid: %s\n", bss->ssid);
+          bss = STAILQ_NEXT(bss, next);
+      }
+
+      break;
+   case FAIL:
+       os_printf("Status FAIL\n");
+         break;
+   case PENDING:
+       os_printf("Status PENDING\n");
+         break;
+   case BUSY:
+       os_printf("Status BUSY\n");
+         break;
+   case CANCEL:
+       os_printf("Status CANCEL\n");
+         break;
+   default:
+       os_printf("Status UNKNOWN\n");
+         break;
+    }
 }
 
 /*Function wifi_connect
