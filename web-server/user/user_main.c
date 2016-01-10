@@ -26,12 +26,11 @@ SOFTWARE.
 #include "os_type.h"
 #include <user_interface.h>
 #include "driver/uart.h"
+#include "user_config.h"
 #include "wifi_manager.h"
 
 #define user_procTaskPrio        0
 #define user_procTaskQueueLen    1
-
-#define DEBUG_SERIAL
 
 static char ssid[32] = "IOT";
 static char pass[64] = "iotnetwork";
@@ -45,11 +44,8 @@ struct scan_config scan;
 
 static void ICACHE_FLASH_ATTR ost_wifi_setup(os_event_t *events){
 	os_printf("WiFi Setup...\n");
-
 	uint8_t stationStatus = wifi_station_get_connect_status();
-
 	//Handle status
-
 	wifi_station_set_auto_connect(TRUE);
 	wifi_setup(&ssid,&pass, STATION_MODE);
 }
