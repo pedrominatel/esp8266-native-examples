@@ -40,8 +40,6 @@ static void ost_loop(os_event_t *events);
 static void ost_wifi_setup(os_event_t *events);
 static void ost_wifi_scan(os_event_t *events);
 
-struct scan_config scan;
-
 static void ICACHE_FLASH_ATTR ost_wifi_setup(os_event_t *events){
 	os_printf("WiFi Setup...\n");
 	uint8_t stationStatus = wifi_station_get_connect_status();
