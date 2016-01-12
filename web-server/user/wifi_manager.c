@@ -65,7 +65,7 @@ void ICACHE_FLASH_ATTR wifiScan_cb(void *arg, STATUS status) {
     }
 }
 
-/*Function wifi_connect
+/*Function wifi_setup
  *
  * */
 void ICACHE_FLASH_ATTR wifi_setup(char* ssid, char* password, uint8_t mode) {
