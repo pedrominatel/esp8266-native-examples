@@ -14,7 +14,8 @@ If you want to add your example here, please, do not hesitate to pull request!
 
 * **blank-project**: Used for new projects with the drivers libs
 * **wifi-connect**: Allow the simple WiFi connection as STATION
-* **blinky**: A simple LED blink using timer and OS task
+* **blink-os-task**: A simple LED blink using OS task
+* **blink-os-timer**: A simple LED blink using timer
 * **web-server**: Soon!
  
 ## Supported Boards and Modules
