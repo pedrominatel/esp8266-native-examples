@@ -23,46 +23,63 @@ SOFTWARE.
 */
 
 #include "osapi.h"
-#include "os_type.h"
-#include <user_interface.h>
-#include "driver/uart.h"
-#include "user_config.h"
 #include "gpio.h"
-
+#include "os_type.h"
+#include "user_config.h"
+ 
 #define user_procTaskPrio        0
 #define user_procTaskQueueLen    1
-
-os_event_t    user_procTaskQueue[user_procTaskQueueLen];
-uint8_t ledState = 0;
-
+ 
+//GPIO a ser utilizada
 #define GPIO                    BIT5
-
-static void ost_loop(os_event_t *events);
-
-static void ICACHE_FLASH_ATTR ost_loop(os_event_t *events){
-	GPIO_OUTPUT_SET(5,ledState);
-	ledState = ~ledState;
-	os_delay_us(1000000);
-    system_os_post(user_procTaskPrio, 0, 0 );
+ 
+os_event_t    user_procTaskQueue[user_procTaskQueueLen];
+static void user_procTask(os_event_t *events);
+ 
+//Definição do TIMER a ser utilizado
+static volatile os_timer_t some_timer;
+ 
+/* Função de blink
+* */
+void some_timerfunc(void *arg)
+{
+if (GPIO_REG_READ(GPIO_OUT_ADDRESS) &amp; GPIO)
+{
+//GPIO LOW
+GPIO_OUTPUT_SET(5,0);
 }
-
-void ICACHE_FLASH_ATTR user_init(void) {
-
-#ifdef DEBUG_SERIAL
-	uart_init(BIT_RATE_115200,BIT_RATE_115200);
-	system_set_os_print(TRUE);
-#else
-	system_set_os_print(FALSE);
-#endif
-
-	//Inicialização do modulo de GPIO
-	gpio_init();
-	//Configura o modo da GPIO
-	PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO5_U, FUNC_GPIO5);
-	//Configura a GPIO para OUTPUT e define para LOW LEVEL
-	GPIO_OUTPUT_SET(GPIO_ID_PIN(5), 0);
-
-	//Create task for main loop
-    system_os_task(ost_loop, user_procTaskPrio,user_procTaskQueue, user_procTaskQueueLen);
-    system_os_post(user_procTaskPrio, 0, 0 );
+else
+{
+//GPIO HIGH
+GPIO_OUTPUT_SET(5,1);
+}
+}
+ 
+//Do nothing function
+static void ICACHE_FLASH_ATTR
+user_procTask(os_event_t *events)
+{
+os_delay_us(10);
+}
+ 
+//Init function
+void ICACHE_FLASH_ATTR
+user_init()
+{
+//Inicialização do modulo de GPIO
+gpio_init();
+//Configura o modo da GPIO
+PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO5_U, FUNC_GPIO5);
+//Configura a GPIO para OUTPUT e define para LOW LEVEL
+GPIO_OUTPUT_SET(GPIO_ID_PIN(5), 0);
+ 
+//Desabilita o timer para a confuguração
+os_timer_disarm(&amp;some_timer);
+//Configura o TIMER
+os_timer_setfn(&amp;some_timer, (os_timer_func_t *)some_timerfunc, NULL);
+//Arma o timer
+os_timer_arm(&amp;some_timer, 1000, 1);
+ 
+//Inicia a uma tarefa no sistema
+system_os_task(user_procTask, user_procTaskPrio,user_procTaskQueue, user_procTaskQueueLen);
 }
