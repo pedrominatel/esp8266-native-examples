@@ -27,37 +27,13 @@ SOFTWARE.
 #include <user_interface.h>
 #include "driver/uart.h"
 #include "user_config.h"
-#include "wifi_manager.h"
 
 #define user_procTaskPrio        0
 #define user_procTaskQueueLen    1
 
-static char ssid[32] = "IOT";
-static char pass[64] = "iotnetwork";
-
 os_event_t    user_procTaskQueue[user_procTaskQueueLen];
 
 static void ost_loop(os_event_t *events);
-static void ost_wifi_setup(os_event_t *events);
-static void ost_wifi_scan(os_event_t *events);
-
-struct scan_config scan;
-
-static void ICACHE_FLASH_ATTR ost_wifi_setup(os_event_t *events){
-	os_printf("WiFi Setup...\n");
-	uint8_t stationStatus = wifi_station_get_connect_status();
-	//Handle status
-	wifi_station_set_auto_connect(TRUE);
-	wifi_setup(&ssid,&pass, STATION_MODE);
-}
-
-static void ICACHE_FLASH_ATTR ost_wifi_scan(os_event_t *events){
-	os_printf("WiFi Scan...\n");
-	os_delay_us(10000);
-	wifi_promiscuous_enable(0);
-	wifi_station_scan(NULL, wifiScan_cb);
-}
-
 
 static void ICACHE_FLASH_ATTR ost_loop(os_event_t *events){
 	os_delay_us(10000);
@@ -76,11 +52,4 @@ void ICACHE_FLASH_ATTR user_init(void) {
 	//Create task for main loop
     system_os_task(ost_loop, user_procTaskPrio,user_procTaskQueue, user_procTaskQueueLen);
     system_os_post(user_procTaskPrio, 0, 0 );
-    //Create task for the WiFi setup
-    system_os_task(ost_wifi_setup, 1,user_procTaskQueue, user_procTaskQueueLen);
-    system_os_post(1, 0, 0 );
-    //Create task for the WiFi networks scan
-    system_os_task(ost_wifi_scan, 2,user_procTaskQueue, user_procTaskQueueLen);
-    system_os_post(2, 0, 0 );
-
 }
