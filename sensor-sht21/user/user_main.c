@@ -26,6 +26,7 @@ SOFTWARE.
 #include "os_type.h"
 #include <user_interface.h>
 #include "driver/uart.h"
+#include "driver/sht21.h"
 #include "user_config.h"
 #include "gpio.h"
 
@@ -42,8 +43,10 @@ static void ost_loop(os_event_t *events);
 static void ICACHE_FLASH_ATTR ost_loop(os_event_t *events){
 	GPIO_OUTPUT_SET(5,ledState);
 	ledState = ~ledState;
+
+	os_printf("Read...\n");
 	os_delay_us(1000000);
-    system_os_post(user_procTaskPrio, 0, 0 );
+	system_os_post(user_procTaskPrio, 0, 0 );
 }
 
 void ICACHE_FLASH_ATTR user_init(void) {
@@ -54,15 +57,14 @@ void ICACHE_FLASH_ATTR user_init(void) {
 #else
 	system_set_os_print(FALSE);
 #endif
-
-	//Inicialização do modulo de GPIO
 	gpio_init();
-	//Configura o modo da GPIO
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO5_U, FUNC_GPIO5);
-	//Configura a GPIO para OUTPUT e define para LOW LEVEL
 	GPIO_OUTPUT_SET(GPIO_ID_PIN(5), 0);
 
-	//Create task for main loop
-    system_os_task(ost_loop, user_procTaskPrio,user_procTaskQueue, user_procTaskQueueLen);
+	bool status = sht21_init();
+
+	os_printf("SHT Init Status %d: \n",status);
+
+	system_os_task(ost_loop, user_procTaskPrio,user_procTaskQueue, user_procTaskQueueLen);
     system_os_post(user_procTaskPrio, 0, 0 );
 }

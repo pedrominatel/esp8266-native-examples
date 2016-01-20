@@ -15,7 +15,7 @@ uint32_t gpio5 = BIT5;
 
 static volatile os_timer_t some_timer;
 
-void some_timerfunc(void *arg)
+void ICACHE_FLASH_ATTR some_timerfunc(void *arg)
 {
     //Do blinky stuff
     if (GPIO_REG_READ(GPIO_OUT_ADDRESS) & gpio5)
@@ -31,15 +31,13 @@ void some_timerfunc(void *arg)
 }
 
 //Função NOP (NO OPERATION)
-static void ICACHE_FLASH_ATTR
-user_procTask(os_event_t *events)
+static void ICACHE_FLASH_ATTR user_procTask(os_event_t *events)
 {
     os_delay_us(10);
 }
 
 //Init function
-void ICACHE_FLASH_ATTR
-user_init()
+void ICACHE_FLASH_ATTR user_init()
 {
     //Inicialização do modulo de GPIO
     gpio_init();
