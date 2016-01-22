@@ -13,23 +13,17 @@
  * */
 bool ICACHE_FLASH_ATTR sht21_reset(void) {
 
-	i2c_master_start();
-	i2c_master_writeByte(SHT21_ADDR);
+	i2c_start();
+	i2c_writeByte(SHT21_ADDR);
 
-	os_delay_us(20000);
-
-	if(i2c_master_checkAck()){
-
-		i2c_master_writeByte(SHT21_RESET);
-
-		os_delay_us(20000);
-
-		if(i2c_master_checkAck()){
-			i2c_master_stop();
+	if(i2c_check_ack()){
+		i2c_writeByte(SHT21_RESET);
+		if(i2c_check_ack()){
+			i2c_stop();
 			return TRUE;
 		}
 	} else {
-		i2c_master_stop();
+		i2c_stop();
 		return FALSE;
 	}
 	return FALSE;
@@ -39,7 +33,7 @@ bool ICACHE_FLASH_ATTR sht21_reset(void) {
  *
  * */
 bool ICACHE_FLASH_ATTR sht21_init(void) {
-	i2c_master_gpio_init();
+	i2c_init();
 	return sht21_reset();
 }
 

@@ -8,7 +8,7 @@
 #ifndef INCLUDE_DRIVER_SHT21_H_
 #define INCLUDE_DRIVER_SHT21_H_
 
-#include "i2c_master.h"
+#include "i2c.h"
 
 #define SHT21_ADDR			0x80
 #define SHT21_T_REG_HOLD	0xe3
