@@ -29,6 +29,19 @@ bool ICACHE_FLASH_ATTR sht21_writeCommand(uint8_t addr,  uint8_t cmd) {
 	return FALSE;
 }
 
+/* Function sht21_readCommand
+ * TODO: Finish it!
+ * */
+uint32_t ICACHE_FLASH_ATTR sht21_readCommand(uint8_t addr) {
+	while (!i2c_check_ack()) {
+		i2c_start();
+		i2c_writeByte(addr);
+		if (!i2c_check_ack)
+			i2c_stop();
+	}
+	return 0;
+}
+
 /* Function sht21_reset
  *
  * */
@@ -47,104 +60,71 @@ bool ICACHE_FLASH_ATTR sht21_init(void) {
 /* Function sht21_read_raw_value
  *
  * */
-int16_t ICACHE_FLASH_ATTR sht21_read_raw_t(void) {
+uint16_t ICACHE_FLASH_ATTR sht21_read_raw(uint8_t reg) {
 
-	if(!sht21_writeCommand(SHT21_ADDR_W, SHT21_T_REG_NHOLD))
+	if(!sht21_writeCommand(SHT21_ADDR_W, reg))
 		return 999;
 
 	os_delay_us(20);
 
-	uint8_t ack = 0;
-
-	while (!ack) {
-		i2c_start();
-		i2c_writeByte(SHT21_ADDR_R);
-		ack = i2c_check_ack();
-		if (!ack)
-			i2c_stop();
-	}
+	sht21_readCommand(SHT21_ADDR_R);
 
 	uint8_t msb = i2c_readByte();
 	i2c_send_ack(1);
 	uint8_t lsb = i2c_readByte();
+
 	i2c_send_ack(0);
 	i2c_stop();
 
+	uint16_t rawH = msb << 8 | lsb;
+	rawH = rawH & 0xFFFC;
 
-	uint16_t _rv = msb << 8;
-	_rv += lsb;
-	_rv &= ~0x0003;
-
-	float rv = _rv;
-
-	rv *= 175.72;
-	rv /= 65536;
-	rv -= 46.85;
-
-	return (int16_t) (rv * 10);
+	return rawH;
 }
 
 /* Function sht21_read_raw_value
  *
  * */
-int16_t ICACHE_FLASH_ATTR sht21_read_raw_h(void) {
+uint16_t ICACHE_FLASH_ATTR sht21_read_raw_value(uint8_t dataType) {
 
-	if(!sht21_writeCommand(SHT21_ADDR_W, SHT21_H_REG_NHOLD))
-		return 999;
-
-	os_delay_us(20);
-
-	uint8_t ack = 0;
-	while (!ack) {
-		i2c_start();
-		i2c_writeByte(SHT21_ADDR_R);
-		ack = i2c_check_ack();
-		if (!ack)
-			i2c_stop();
-	}
-
-	uint8_t msb = i2c_readByte();
-	i2c_send_ack(1);
-	uint8_t lsb = i2c_readByte();
-	i2c_send_ack(0);
-	i2c_stop();
-
-
-	uint16_t _rv = msb << 8;
-	_rv += lsb;
-	_rv &= ~0x0003;
-
-	float rv = _rv;
-
-    rv *= 125.0;
-    rv /= 65536;
-    rv -= 6.0;
-
-	return (int16_t) (rv * 10);
-}
-
-/* Function sht21_read_raw_value
- *
- * */
-int16_t ICACHE_FLASH_ATTR sht21_read_raw_value(uint8_t dataType) {
-
-	int16_t raw_data = 0;
+	uint16_t raw_data = 0;
 
     switch(dataType){
         case SHT21_TEMPERATURE:
-        	raw_data = sht21_read_raw_t();
+        	raw_data = sht21_read_raw(SHT21_T_REG_NHOLD);
             break;
         case SHT21_HUMIDITY:
-        	raw_data = sht21_read_raw_h();
+        	raw_data = sht21_read_raw(SHT21_H_REG_NHOLD);
             break;
     }
 return raw_data;
 }
 
-/* Function sht21_get_temp
+/* Function sht21_get_temperature
  *
  * */
-uint16_t ICACHE_FLASH_ATTR sht21_get_value(void) {
-    return 0;
+int16_t ICACHE_FLASH_ATTR sht21_get_temperature(void) {
+
+	float tValue = sht21_read_raw_value(SHT21_TEMPERATURE);
+
+	tValue *= 175.72;
+	tValue /= 0xFFFF;
+	tValue -= 46.85;
+
+	return (int16_t) (tValue * 10);
+}
+
+/* Function sht21_get_humidity
+ *
+ * */
+int16_t ICACHE_FLASH_ATTR sht21_get_humdity(void) {
+
+	float hValue = sht21_read_raw_value(SHT21_HUMIDITY);
+
+	hValue *= 125.0;
+	hValue /= 0xFFFF;
+	hValue -= 6.0;
+
+    return (int16_t) (hValue * 10);
 }
 

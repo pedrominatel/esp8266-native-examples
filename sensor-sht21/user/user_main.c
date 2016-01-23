@@ -35,7 +35,8 @@ SOFTWARE.
 
 os_event_t    user_procTaskQueue[user_procTaskQueueLen];
 uint8_t ledState = 0;
-int16_t rawT = 0;
+int16_t t = 0;
+int16_t h = 0;
 
 #define GPIO                    BIT5
 
@@ -46,10 +47,10 @@ static void ICACHE_FLASH_ATTR ost_loop(os_event_t *events){
 	ledState = ~ledState;
 
 	os_delay_us(500000);
-	rawT = sht21_read_raw_value(SHT21_TEMPERATURE);
-	os_printf("Raw T: %d\n", rawT);
-	rawT = sht21_read_raw_value(SHT21_HUMIDITY);
-	os_printf("Raw H: %d\n", rawT);
+	t = sht21_get_temperature();
+	os_printf("Raw T: %d\n", t);
+	h = sht21_get_humdity();
+	os_printf("Raw H: %d\n", h);
 
 	system_os_post(user_procTaskPrio, 0, 0 );
 }
