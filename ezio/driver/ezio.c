@@ -1,77 +1,105 @@
 /*
  *
  *
-*/
+ */
 
-/*
-	GPIO0		GPIO0_U
-	GPIO1		U0TXD_U
-	GPIO2		GPIO2_U
-	GPIO3		U0RXD_U
-	GPIO4		GPIO4_U
-	GPIO5		GPIO5_U
-	GPIO6		SD_CLK_U
-	GPIO7		SD_DATA0_U
-	GPIO8		SD_DATA1_U
-	GPIO9		SD_DATA2_U
-	GPIO10		SD_DATA3_U
-	GPIO11		SD_CMD_U
-	GPIO12		MTDI_U
-	GPIO13		MTCK_U
-	GPIO14		MTMS_U
-	GPIO15		MTDO_U
-*/
-
-enum GPIO {
-	GPIO0,
-	GPIO1,
-	GPIO2,
-	GPIO3,
-	GPIO4,
-	GPIO5,
-	GPIO6,
-	GPIO7,
-	GPIO8,
-	GPIO9,
-	GPIO10,
-	GPIO11,
-	GPIO12,
-	GPIO13,
-	GPIO14,
-	GPIO15
-}
+#include "ets_sys.h"
+#include "osapi.h"
+#include "gpio.h"
+#include "os_type.h"
+#include "user_config.h"
+#include "driver/ezio.h"
 
 /* Function ezio_init
-* */
-void ezio_init(void){
+ * */
+void ezio_init(void) {
+	gpio_init();
 }
 
 /* Function ezio_set
  * */
-void ezio_set(uint8_t pin, uint8_t mode){        
+void ezio_set(GPIO pin, GPIO_MODE mode) {
+
+	switch (pin) {
+	case GPIO0:
+		PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO0_U, FUNC_GPIO0);
+		break;
+	case GPIO1:
+		PIN_FUNC_SELECT(PERIPHS_IO_MUX_U0TXD_U, FUNC_GPIO1);
+		break;
+	case GPIO2:
+		PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO2_U, FUNC_GPIO2);
+		break;
+	case GPIO3:
+		PIN_FUNC_SELECT(PERIPHS_IO_MUX_U0RXD_U, FUNC_GPIO3);
+		break;
+	case GPIO4:
+		PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO4_U, FUNC_GPIO4);
+		break;
+	case GPIO5:
+		PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO5_U, FUNC_GPIO5);
+		break;
+	case GPIO6:
+		PIN_FUNC_SELECT(PERIPHS_IO_MUX_SD_CLK_U, FUNC_SDCLK);
+		break;
+	case GPIO7:
+		PIN_FUNC_SELECT(PERIPHS_IO_MUX_SD_DATA0_U, FUNC_SDDATA0);
+		break;
+	case GPIO8:
+		PIN_FUNC_SELECT(PERIPHS_IO_MUX_SD_DATA1_U, FUNC_SDDATA1);
+		break;
+	case GPIO9:
+		PIN_FUNC_SELECT(PERIPHS_IO_MUX_SD_DATA2_U, FUNC_SDDATA2);
+		break;
+	case GPIO10:
+		PIN_FUNC_SELECT(PERIPHS_IO_MUX_SD_DATA3_U, FUNC_SDDATA3);
+		break;
+	case GPIO11:
+		PIN_FUNC_SELECT(PERIPHS_IO_MUX_SD_CMD_U, FUNC_SDCMD);
+		break;
+	case GPIO12:
+		PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDI_U, FUNC_GPIO12);
+		break;
+	case GPIO13:
+		PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTCK_U, FUNC_GPIO13);
+		break;
+	case GPIO14:
+		PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTMS_U, FUNC_GPIO14);
+		break;
+	case GPIO15:
+		PIN_FUNC_SELECT(PERIPHS_IO_MUX_MTDO_U, FUNC_GPIO15);
+		break;
+	}
+
+	if(mode == INPUT){
+		GPIO_DIS_OUTPUT(GPIO_ID_PIN(pin));
+	}
 }
 
 /* Function ezio_set
  * */
-void ezio_set(uint8_t pin, uint8_t mode, uint8_t pullup){
-}
-
-void ezio_set_intr(uint8_t pin, uint8_t mode){
+//void ezio_set(uint8_t pin, uint8_t mode, uint8_t pullup){
+//}
+/* Function ezio_set_intr
+ * Function to configure the pin interruption
+ * */
+void ezio_set_intr(GPIO pin, GPIO_MODE mode) {
 }
 
 /* Function ezio_write
  * */
-void ezio_write(uint8_t gpio, uint8_t state){
+void ezio_write(GPIO gpio, GPIO_STATE state) {
+	GPIO_OUTPUT_SET(GPIO_ID_PIN(gpio), state);
 }
 
 /* Function ezio_read
  * */
-bool ezio_read(uint8_t gpio){
-return TRUE;
+bool ezio_read(GPIO gpio) {
+	return GPIO_INPUT_GET(GPIO_ID_PIN(gpio));
 }
 
 /* Function ezio_disable disable the pin by setting as output
  * and disable interruption for robustness reasons
  * */
-void ezio_disable(uint8_t pin){
+void ezio_disable(GPIO pin) {
 }
