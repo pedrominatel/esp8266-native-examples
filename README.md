@@ -17,6 +17,7 @@ If you want to add your example here, please, do not hesitate to pull request!
 * **blink-os-task**: A simple LED blink using OS task
 * **blink-os-timer**: A simple LED blink using timer
 * **web-server**: Soon!
+* **sensor-sht21**: An example to how to use the SHT21 on ESP8266
  
 ## Supported Boards and Modules
 ================
