@@ -76,30 +76,28 @@ void ezio_set(GPIO pin, GPIO_MODE mode) {
 	}
 }
 
-/* Function ezio_set
- * */
-//void ezio_set(uint8_t pin, uint8_t mode, uint8_t pullup){
-//}
 /* Function ezio_set_intr
  * Function to configure the pin interruption
  * */
 void ezio_set_intr(GPIO pin, GPIO_MODE mode) {
+	//TODO
 }
 
 /* Function ezio_write
  * */
-void ezio_write(GPIO gpio, GPIO_STATE state) {
-	GPIO_OUTPUT_SET(GPIO_ID_PIN(gpio), state);
+void ezio_write(GPIO pin, GPIO_STATE state) {
+	GPIO_OUTPUT_SET(GPIO_ID_PIN(pin), state);
 }
 
 /* Function ezio_read
  * */
-bool ezio_read(GPIO gpio) {
-	return GPIO_INPUT_GET(GPIO_ID_PIN(gpio));
+bool ezio_read(GPIO pin) {
+	return GPIO_INPUT_GET(GPIO_ID_PIN(pin));
 }
 
 /* Function ezio_disable disable the pin by setting as output
  * and disable interruption for robustness reasons
  * */
 void ezio_disable(GPIO pin) {
+	GPIO_OUTPUT_SET(GPIO_ID_PIN(pin), LOW);
 }
