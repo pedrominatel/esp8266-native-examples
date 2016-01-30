@@ -1,21 +1,3 @@
-/*
-	GPIO0		GPIO0_U
-	GPIO1		U0TXD_U
-	GPIO2		GPIO2_U
-	GPIO3		U0RXD_U
-	GPIO4		GPIO4_U
-	GPIO5		GPIO5_U
-	GPIO6		SD_CLK_U
-	GPIO7		SD_DATA0_U
-	GPIO8		SD_DATA1_U
-	GPIO9		SD_DATA2_U
-	GPIO10		SD_DATA3_U
-	GPIO11		SD_CMD_U
-	GPIO12		MTDI_U
-	GPIO13		MTCK_U
-	GPIO14		MTMS_U
-	GPIO15		MTDO_U
-*/
 
 typedef enum e_GPIO_STATE {
 	LOW,
@@ -45,3 +27,9 @@ typedef enum e_GPIO {
 	GPIO14,
 	GPIO15
 } GPIO;
+
+void ezio_set(GPIO pin, GPIO_MODE mode);
+void ezio_set_intr(GPIO pin, GPIO_MODE mode);
+void ezio_write(GPIO pin, GPIO_STATE state);
+bool ezio_read(GPIO pin);
+void ezio_disable(GPIO pin);
