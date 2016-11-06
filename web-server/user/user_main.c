@@ -32,8 +32,8 @@ SOFTWARE.
 #define user_procTaskPrio        0
 #define user_procTaskQueueLen    1
 
-static char ssid[32] = "IOT";
-static char pass[64] = "iotnetwork";
+static char ssid[32] = "<<SSID>>";
+static char pass[64] = "<<PASS>>";
 
 os_event_t    user_procTaskQueue[user_procTaskQueueLen];
 
